@@ -7,13 +7,12 @@
 #include <iostream>
 using namespace std;
 #include "tablero.h"
+#include <cassert>
 
 void inicializartablero(tablero tab[7][7]) {
 	//Poner los valores del tablero a "_" y vaciar las posiciones (Inicializacion del tablero)
-	for (int i = 0; i < 7; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
+	for (int i = 0; i < 7; i++){
+		for (int j = 0; j < 7; j++){
 			tab[i][j].ocupado = false;
 			tab[i][j].valor = '_';
 		}
@@ -159,9 +158,73 @@ bool comprobarGanador(tablero tab[7][7]) {
 
 	return false;
 }
+//____________________________CODI DE TESTS___________________________________
+
+void testFicha() {
+	tablero uno;
+	uno.ocupado = false;
+	uno.valor = 'O';
+	assert(uno.ocupado==false);
+	assert(uno.valor == 'O');
+}
+
+void testCreartablero() {
+	tablero testablero[7][7];
+	assert(testablero != NULL);
+	for (int i = 0; i < 7; i++){
+		for (int j = 0; j < 7; j++){
+			testablero[i][j].ocupado = true;
+			testablero[i][j].valor = 'a';
+		}
+	}
+	assert(testablero[1][3].ocupado == true);
+	assert(testablero[1][3].valor == 'a');
+}
 
 
+void testinsertar(tablero tab[7][7]) {
+	bool metido = false;
+	int pos = 0;
+	do
+	{
+		if (tab[0][pos].ocupado==false)
+		{
+			tab[0][pos].ocupado = true;
+			tab[0][pos].valor = 'X';
+			metido = true;
+		}
+		else {
+			pos +=1;
+		}
+	} while (metido == false);
+}
+
+void testmeterficha() {
+	tablero tabtestmeterficha[7][7];
+	assert(tabtestmeterficha != NULL);
+	for (int i = 0; i < 7; i++){
+		for (int j = 0; j < 7; j++){
+			tabtestmeterficha[i][j].ocupado = false;
+			tabtestmeterficha[i][j].valor = '_';
+		}
+	}
+	testinsertar(tabtestmeterficha);
+	assert(tabtestmeterficha[0][0].ocupado == true);
+	assert(tabtestmeterficha[0][0].valor == 'X');
+}
+
+void tests() {
+	testFicha();
+	testCreartablero();
+	testmeterficha();
+	cout << "Los tests han ido bien"<<endl;
+	cout << "Introduzca su nombre para empezar la partida" << endl;
+	string enter;	
+	cin >> enter;
+}
+//______________________________MAIN___________________________________________
 int main(){
+	tests();
 	string respuesta = "";
 	tablero tab[7][7];
 	inicializartablero(tab);
