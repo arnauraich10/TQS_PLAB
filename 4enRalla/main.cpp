@@ -8,11 +8,12 @@
 using namespace std;
 #include "tablero.h"
 #include <cassert>
+#include <fstream>
 
 void inicializartablero(tablero tab[7][7]) {
 	//Poner los valores del tablero a "_" y vaciar las posiciones (Inicializacion del tablero)
-	for (int i = 0; i < 7; i++){
-		for (int j = 0; j < 7; j++){
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
 			tab[i][j].ocupado = false;
 			tab[i][j].valor = '_';
 		}
@@ -66,7 +67,7 @@ int seleccionarposicion() {
 	return posicion2;
 }
 
-void meterficha(tablero tab[7][7],bool turno) {
+void meterficha(tablero tab[7][7], bool turno) {
 	int posicion;
 	posicion = seleccionarposicion();
 	bool puesta = true;
@@ -82,10 +83,11 @@ void meterficha(tablero tab[7][7],bool turno) {
 			if (tab[6][posicion - 1].ocupado == false)
 			{
 				tab[6][posicion - 1].ocupado = true;
-				if (turno==true)
+				if (turno == true)
 				{
 					tab[6][posicion - 1].valor = 'X';
-				}else{
+				}
+				else {
 					tab[6][posicion - 1].valor = 'O';
 				}
 			}
@@ -94,12 +96,12 @@ void meterficha(tablero tab[7][7],bool turno) {
 				do
 				{
 					fila = fila - 1;
-				}while (tab[fila][posicion - 1].ocupado == true);
+				} while (tab[fila][posicion - 1].ocupado == true);
 				tab[fila][posicion - 1].ocupado = true;
-				if (turno == true)				{
+				if (turno == true) {
 					tab[fila][posicion - 1].valor = 'X';
 				}
-				else{
+				else {
 					tab[fila][posicion - 1].valor = 'O';
 				}
 			}
@@ -158,21 +160,43 @@ bool comprobarGanador(tablero tab[7][7]) {
 
 	return false;
 }
+
+void guardarRanking(int puntosX, int puntosO) {
+	ofstream archivo("ranking.txt");
+	if (archivo.is_open()) {
+		archivo << puntosX << " " << puntosO << endl;
+		archivo.close();
+	}
+	else {
+		cout << "No se pudo abrir el archivo de ranking." << endl;
+	}
+}
+
+void cargarRanking(int& puntosX, int& puntosO) {
+	ifstream archivo("ranking.txt");
+	if (archivo.is_open()) {
+		archivo >> puntosX >> puntosO;
+		archivo.close();
+	}
+	else {
+		cout << "No se pudo abrir el archivo de ranking." << endl;
+	}
+}
 //____________________________CODI DE TESTS___________________________________
 
 void testFicha() {
 	tablero uno;
 	uno.ocupado = false;
 	uno.valor = 'O';
-	assert(uno.ocupado==false);
+	assert(uno.ocupado == false);
 	assert(uno.valor == 'O');
 }
 
 void testCreartablero() {
 	tablero testablero[7][7];
 	assert(testablero != NULL);
-	for (int i = 0; i < 7; i++){
-		for (int j = 0; j < 7; j++){
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
 			testablero[i][j].ocupado = true;
 			testablero[i][j].valor = 'a';
 		}
@@ -187,14 +211,14 @@ void testinsertar(tablero tab[7][7]) {
 	int pos = 0;
 	do
 	{
-		if (tab[0][pos].ocupado==false)
+		if (tab[0][pos].ocupado == false)
 		{
 			tab[0][pos].ocupado = true;
 			tab[0][pos].valor = 'X';
 			metido = true;
 		}
 		else {
-			pos +=1;
+			pos += 1;
 		}
 	} while (metido == false);
 }
@@ -202,8 +226,8 @@ void testinsertar(tablero tab[7][7]) {
 void testmeterficha() {
 	tablero tabtestmeterficha[7][7];
 	assert(tabtestmeterficha != NULL);
-	for (int i = 0; i < 7; i++){
-		for (int j = 0; j < 7; j++){
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
 			tabtestmeterficha[i][j].ocupado = false;
 			tabtestmeterficha[i][j].valor = '_';
 		}
@@ -212,41 +236,70 @@ void testmeterficha() {
 	assert(tabtestmeterficha[0][0].ocupado == true);
 	assert(tabtestmeterficha[0][0].valor == 'X');
 }
+void testRanking() {
+	int puntosX = 3;
+	int puntosO = 5;
+
+	guardarRanking(puntosX, puntosO);
+
+	int puntosXLeidos = 0;
+	int puntosOLeidos = 0;
+	cargarRanking(puntosXLeidos, puntosOLeidos);
+
+	assert(puntosXLeidos == puntosX);
+	assert(puntosOLeidos == puntosO);
+
+}
 
 void tests() {
 	testFicha();
 	testCreartablero();
 	testmeterficha();
-	cout << "Los tests han ido bien"<<endl;
-	cout << "Introduzca su nombre para empezar la partida" << endl;
-	string enter;	
-	cin >> enter;
+	testRanking();
+	cout << "Los tests han ido bien" << endl;
+	//cout << "Introduzca su nombre para empezar la partida" << endl;
+	//string enter;	
+	//cin >> enter;
 }
 //______________________________MAIN___________________________________________
-int main(){
+int main() {
 	tests();
 	string respuesta = "";
 	tablero tab[7][7];
 	inicializartablero(tab);
 	bool partida = true;
 	bool turno = true;
+	int puntosX = 0;
+	int puntosO = 0;
+
 	do
 	{
-		if (turno==true){
+		cargarRanking(puntosX, puntosO);
+		cout << "Ranking Actual: " << endl;
+		cout << "Victorias de X: " << puntosX << endl;
+		cout << "Victorias de O: " << puntosO << endl;
+		if (turno == true) {
 			cout << "Turno del jugador X" << "\n";
-		}else{
+		}
+		else {
 			cout << "Turno del jugador O" << "\n";
 		}
 		mostrartablero(tab);
-		meterficha(tab,turno);
+		meterficha(tab, turno);
 		std::cout << "\x1B[2J\x1B[H";
-		
+
 		if (comprobarGanador(tab)) {
 			if (turno == true) {
 				cout << "Jugador X ha ganado" << endl;
+				puntosX++;
+				cout << "Jugador X ya lleva " << puntosX << " partidas ganadas" << endl;
+				guardarRanking(puntosX, puntosO);
 			}
 			else {
 				cout << "Jugador O ha ganado" << endl;
+				puntosO++;
+				cout << "Jugador O ya lleva " << puntosO << " partidas ganadas" << endl;
+				guardarRanking(puntosX, puntosO);
 			}
 			cout << "Quieres jugar otra partida? (s/n): " << endl;
 			cin >> respuesta;
