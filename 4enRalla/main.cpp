@@ -251,11 +251,139 @@ void testRanking() {
 
 }
 
+void testinsertarposicion(int posicion) {
+	bool condicion = true;
+	do
+	{
+		switch (posicion)
+		{
+		case 1:
+			condicion = false;
+			break;
+		case 2:
+			condicion = false;
+			break;
+		case 3:
+			condicion = false;
+			break;
+		case 4:
+			condicion = false;
+			break;
+		case 5:
+			condicion = false;
+			break;
+		case 6:
+			condicion = false;
+			break;
+		case 7:
+			condicion = false;
+			break;
+		default:
+			cout << "Esta posicion no es valida" << "\n";
+			break;
+		}
+	} while (condicion);
+}
+
+void testatementcoveragemeterfichatrueuno(bool turno) {
+	tablero tab[7][7];
+	int posicion = 3;
+	tab[0][2].ocupado = true;
+	bool puesta = true;
+	do{
+		if (tab[0][posicion - 1].ocupado == true){
+			cout << "No caben mas fichas en esta columna" << "\n";
+			posicion = 4;
+		}else{
+			puesta = false;
+			tab[6][posicion - 1].ocupado == false;
+			if (tab[6][posicion - 1].ocupado == false)
+			{
+				tab[6][posicion - 1].ocupado = true;
+				if (turno == true){
+					tab[6][posicion - 1].valor = 'X';
+				}else{
+					tab[6][posicion - 1].valor = 'O';
+				}
+			}else {
+				int fila = 7;
+				do{
+					fila = fila - 1;
+				}while (tab[fila][posicion - 1].ocupado == true);
+					tab[fila][posicion - 1].ocupado = true;
+				if (turno == true) {
+					tab[fila][posicion - 1].valor = 'X';
+				}
+				else {
+					tab[fila][posicion - 1].valor = 'O';
+				}
+			}
+		}
+	} while (puesta);
+}
+
+void testatementcoveragemeterfichatruedos(bool turno) {
+	tablero tab[7][7];
+	int posicion = 3;
+	tab[0][2].ocupado = false;
+	bool puesta = true;
+	do {
+		if (tab[0][posicion - 1].ocupado == true) {
+			cout << "No caben mas fichas en esta columna" << "\n";
+			posicion = 4;
+		}
+		else {
+			puesta = false;
+			tab[6][posicion - 1].ocupado == true;
+			if (tab[6][posicion - 1].ocupado == false)
+			{
+				tab[6][posicion - 1].ocupado = true;
+				if (turno == true) {
+					tab[6][posicion - 1].valor = 'X';
+				}
+				else {
+					tab[6][posicion - 1].valor = 'O';
+				}
+			}
+			else {
+				int fila = 7;
+				do {
+					fila = fila - 1;
+				} while (tab[fila][posicion - 1].ocupado == true);
+				tab[fila][posicion - 1].ocupado = true;
+				if (turno == true) {
+					tab[fila][posicion - 1].valor = 'X';
+				}
+				else {
+					tab[fila][posicion - 1].valor = 'O';
+				}
+			}
+		}
+	} while (puesta);
+}
+
+
 void tests() {
+	//TDD
 	testFicha();
 	testCreartablero();
 	testmeterficha();
 	testRanking();
+	//Particions equivalents i Valors limit i frontera
+	/*testinsertarposicion(-10);
+	testinsertarposicion(-1);
+	testinsertarposicion(0);
+	testinsertarposicion(1);
+	testinsertarposicion(3);
+	testinsertarposicion(6);
+	testinsertarposicion(7);
+	testinsertarposicion(8);
+	testinsertarposicion(10);*/
+	//Statement coverage + Condition Coverage + Decision Coverage + Path Coverage
+	testatementcoveragemeterfichatrueuno(true);
+	testatementcoveragemeterfichatrueuno(false);
+	testatementcoveragemeterfichatruedos(true);
+	testatementcoveragemeterfichatruedos(false);
 	cout << "Los tests han ido bien" << endl;
 	//cout << "Introduzca su nombre para empezar la partida" << endl;
 	//string enter;	
