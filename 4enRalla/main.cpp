@@ -302,8 +302,10 @@ void testatementcoveragemeterfichatrueuno(bool turno) {
 				tab[6][posicion - 1].ocupado = true;
 				if (turno == true){
 					tab[6][posicion - 1].valor = 'X';
+					assert(tab[6][posicion - 1].valor == 'X');
 				}else{
 					tab[6][posicion - 1].valor = 'O';
+					assert(tab[6][posicion - 1].valor == 'O');
 				}
 			}else {
 				int fila = 7;
@@ -311,11 +313,14 @@ void testatementcoveragemeterfichatrueuno(bool turno) {
 					fila = fila - 1;
 				}while (tab[fila][posicion - 1].ocupado == true);
 					tab[fila][posicion - 1].ocupado = true;
+					assert(tab[fila][posicion - 1].ocupado == true);
 				if (turno == true) {
 					tab[fila][posicion - 1].valor = 'X';
+					assert(tab[fila][posicion - 1].valor == 'X');
 				}
 				else {
 					tab[fila][posicion - 1].valor = 'O';
+					assert(tab[fila][posicion - 1].valor == 'O');
 				}
 			}
 		}
@@ -340,9 +345,11 @@ void testatementcoveragemeterfichatruedos(bool turno) {
 				tab[6][posicion - 1].ocupado = true;
 				if (turno == true) {
 					tab[6][posicion - 1].valor = 'X';
+					assert(tab[6][posicion - 1].valor =='X');
 				}
 				else {
 					tab[6][posicion - 1].valor = 'O';
+					assert(tab[6][posicion - 1].valor == 'O');
 				}
 			}
 			else {
@@ -350,12 +357,15 @@ void testatementcoveragemeterfichatruedos(bool turno) {
 				do {
 					fila = fila - 1;
 				} while (tab[fila][posicion - 1].ocupado == true);
-				tab[fila][posicion - 1].ocupado = true;
+					tab[fila][posicion - 1].ocupado = true;
+					assert(tab[fila][posicion - 1].ocupado == true);
 				if (turno == true) {
 					tab[fila][posicion - 1].valor = 'X';
+					assert(tab[fila][posicion - 1].valor == 'X');
 				}
 				else {
 					tab[fila][posicion - 1].valor = 'O';
+					assert(tab[fila][posicion - 1].valor == 'O');
 				}
 			}
 		}
