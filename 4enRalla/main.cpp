@@ -10,6 +10,7 @@ using namespace std;
 #include <cassert>
 #include <fstream>
 
+// Función para inicializar el tablero
 void inicializartablero(tablero tab[7][7]) {
 	//Poner los valores del tablero a "_" y vaciar las posiciones (Inicializacion del tablero)
 	for (int i = 0; i < 7; i++) {
@@ -20,6 +21,7 @@ void inicializartablero(tablero tab[7][7]) {
 	}
 }
 
+// Función para mostrar el tablero
 void mostrartablero(tablero tab[7][7]) {
 	cout << "1 2 3 4 5 6 7 " << "\n";
 	for (int i = 0; i < 7; i++) {
@@ -29,6 +31,8 @@ void mostrartablero(tablero tab[7][7]) {
 		cout << "\n";
 	}
 }
+
+// Función para seleccionar una posición válida
 int seleccionarposicion() {
 	bool condicion = true;
 	int posicion2;
@@ -67,6 +71,7 @@ int seleccionarposicion() {
 	return posicion2;
 }
 
+// Función para insertar una ficha en el tablero
 void meterficha(tablero tab[7][7], bool turno) {
 	int posicion;
 	posicion = seleccionarposicion();
@@ -109,6 +114,7 @@ void meterficha(tablero tab[7][7], bool turno) {
 	} while (puesta);
 }
 
+// Función para comprobar condiciones de victoria en el tablero
 bool comprobarGanador(tablero tab[7][7]) {
 	// Comprobar filas
 	for (int i = 0; i < 7; i++) {
@@ -161,6 +167,7 @@ bool comprobarGanador(tablero tab[7][7]) {
 	return false;
 }
 
+// Función para guardar el ranking en un archivo txt
 void guardarRanking(int puntosX, int puntosO) {
 	ofstream archivo("ranking.txt");
 	if (archivo.is_open()) {
@@ -172,6 +179,7 @@ void guardarRanking(int puntosX, int puntosO) {
 	}
 }
 
+// Función para cargar el ranking desde un archivo txt
 void cargarRanking(int& puntosX, int& puntosO) {
 	ifstream archivo("ranking.txt");
 	if (archivo.is_open()) {
@@ -184,6 +192,7 @@ void cargarRanking(int& puntosX, int& puntosO) {
 }
 //____________________________CODI DE TESTS___________________________________
 
+// Función de test para la estructura 'tablero'
 void testFicha() {
 	tablero uno;
 	uno.ocupado = false;
@@ -192,6 +201,7 @@ void testFicha() {
 	assert(uno.valor == 'O');
 }
 
+// Función de test para la inicialización del tablero
 void testCreartablero() {
 	tablero testablero[7][7];
 	assert(testablero != NULL);
@@ -205,7 +215,7 @@ void testCreartablero() {
 	assert(testablero[1][3].valor == 'a');
 }
 
-
+// Función de test para insertar una ficha en el tablero
 void testinsertar(tablero tab[7][7]) {
 	bool metido = false;
 	int pos = 0;
@@ -223,6 +233,7 @@ void testinsertar(tablero tab[7][7]) {
 	} while (metido == false);
 }
 
+// Función de test para meterficha
 void testmeterficha() {
 	tablero tabtestmeterficha[7][7];
 	assert(tabtestmeterficha != NULL);
@@ -236,6 +247,8 @@ void testmeterficha() {
 	assert(tabtestmeterficha[0][0].ocupado == true);
 	assert(tabtestmeterficha[0][0].valor == 'X');
 }
+
+// Función de test para guardarRanking y cargarRanking
 void testRanking() {
 	int puntosX = 3;
 	int puntosO = 5;
@@ -251,6 +264,7 @@ void testRanking() {
 
 }
 
+// Función de test para validar las posiciones ingresadas
 void testinsertarposicion(int posicion) {
 	bool condicion = true;
 	do
@@ -285,6 +299,7 @@ void testinsertarposicion(int posicion) {
 	} while (condicion);
 }
 
+// Función de test para statement coverage en meterficha cuando la columna está llena
 void testatementcoveragemeterfichatrueuno(bool turno) {
 	tablero tab[7][7];
 	int posicion = 3;
@@ -327,6 +342,7 @@ void testatementcoveragemeterfichatrueuno(bool turno) {
 	} while (puesta);
 }
 
+// Función de test para statement coverage en meterficha cuando la columna no está llena
 void testatementcoveragemeterfichatruedos(bool turno) {
 	tablero tab[7][7];
 	int posicion = 3;
@@ -339,7 +355,7 @@ void testatementcoveragemeterfichatruedos(bool turno) {
 		}
 		else {
 			puesta = false;
-			tab[6][posicion - 1].ocupado == true;
+			tab[6][posicion - 1].ocupado = true;
 			if (tab[6][posicion - 1].ocupado == false)
 			{
 				tab[6][posicion - 1].ocupado = true;
@@ -372,6 +388,150 @@ void testatementcoveragemeterfichatruedos(bool turno) {
 	} while (puesta);
 }
 
+//test para comprobar que jugador ha ganado y con que tipo de victoria
+bool testVictoria(tablero tabs[7][7]) {
+
+	//victoria para X de tipo fila
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'X' &&
+				tabs[i][j].valor == tabs[i][j + 1].valor &&
+				tabs[i][j].valor == tabs[i][j + 2].valor &&
+				tabs[i][j].valor == tabs[i][j + 3].valor) {
+				cout << "Victoria X fila" << "\n";
+				return true;
+			}
+		}
+	}
+	//Victoria para X de tipo columna
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'X' && 
+				tabs[i][j].valor == tabs[i + 1][j].valor &&
+				tabs[i][j].valor == tabs[i + 2][j].valor &&
+				tabs[i][j].valor == tabs[i + 3][j].valor) {
+				cout << "Victoria X columna" << "\n";
+				return true;
+			}
+		}
+	}
+	//Victoria para X de tipo diagonal
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'X' &&
+				tabs[i][j].valor == tabs[i + 1][j + 1].valor &&
+				tabs[i][j].valor == tabs[i + 2][j + 2].valor &&
+				tabs[i][j].valor == tabs[i + 3][j + 3].valor) {
+				cout << "Victoria X Diagonal" << "\n";
+				return true;
+			}
+		}
+	}
+	//victoria para Y de tipo fila
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'O' &&
+				tabs[i][j].valor == tabs[i][j + 1].valor &&
+				tabs[i][j].valor == tabs[i][j + 2].valor &&
+				tabs[i][j].valor == tabs[i][j + 3].valor) {
+				cout << "Victoria O fila" << "\n";
+				return true;
+			}
+		}
+	}
+	//victoria para Y de tipo columna
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'O' &&
+				tabs[i][j].valor == tabs[i + 1][j].valor &&
+				tabs[i][j].valor == tabs[i + 2][j].valor &&
+				tabs[i][j].valor == tabs[i + 3][j].valor) {
+				cout << "Victoria O columna" << "\n";
+				return true;
+			}
+		}
+	}
+	//victoria para Y de tipo diagonal
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (tabs[i][j].ocupado && tabs[i][j].valor == 'O' &&
+				tabs[i][j].valor == tabs[i + 1][j + 1].valor &&
+				tabs[i][j].valor == tabs[i + 2][j + 2].valor &&
+				tabs[i][j].valor == tabs[i + 3][j + 3].valor) {
+				cout << "Victoria O Diagonal" << "\n";
+				return true;
+			}
+		}
+	}
+
+
+	return false;
+
+}
+
+//Inicialización de diferentes tableros segun diferentes tipos de victorias
+void testTableroXColumna(tablero tabs[7][7]) {
+	
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 7; ++j) {
+			tabs[i][2].ocupado = true;
+			tabs[i][2].valor = 'X';
+		}
+	}
+
+}
+
+void testTableroYColumna(tablero tabs[7][7]) {
+
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 7; ++j) {
+			tabs[i][2].ocupado = true;
+			tabs[i][2].valor = 'O';
+		}
+	}
+
+}
+
+void testTableroXFila(tablero tabs[7][7]) {
+
+	for (int i = 0; i < 7; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			tabs[3][j].ocupado = true;
+			tabs[3][j].valor = 'X';
+		}
+	}
+
+}
+
+void testTableroYFila(tablero tabs[7][7]) {
+
+	for (int i = 0; i < 7; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			tabs[3][j].ocupado = true;
+			tabs[3][j].valor = 'O';
+		}
+	}
+
+}
+
+
+void testTableroXDiagonal(tablero tabs[7][7]) {
+
+	for (int i = 0; i < 4; ++i) {
+		tabs[i][i].ocupado = true;
+		tabs[i][i].valor = 'X';
+	}
+
+}
+
+void testTableroYDiagonal(tablero tabs[7][7]) {
+
+	for (int i = 0; i < 4; ++i) {
+		tabs[i][i].ocupado = true;
+		tabs[i][i].valor = 'O';
+	}
+
+}
 
 void tests() {
 	//TDD
@@ -394,10 +554,38 @@ void tests() {
 	testatementcoveragemeterfichatrueuno(false);
 	testatementcoveragemeterfichatruedos(true);
 	testatementcoveragemeterfichatruedos(false);
+
+	//Tests pairwise tipos victorias
+	tablero tabs1[7][7];
+	tablero tabs2[7][7];
+	tablero tabs3[7][7];
+	tablero tabs4[7][7];
+	tablero tabs5[7][7];
+	tablero tabs6[7][7];
+
+	inicializartablero(tabs1);
+	inicializartablero(tabs2);
+	inicializartablero(tabs3);
+	inicializartablero(tabs4);
+	inicializartablero(tabs5);
+	inicializartablero(tabs6);
+
+
+	testTableroXFila(tabs1);
+	assert(testVictoria(tabs1));
+	testTableroYFila(tabs2);
+	assert(testVictoria(tabs2));
+	testTableroXColumna(tabs3);
+	assert(testVictoria(tabs3));
+	testTableroYColumna(tabs4);
+	assert(testVictoria(tabs4));
+	testTableroXDiagonal(tabs5);
+	assert(testVictoria(tabs5));
+	testTableroYDiagonal(tabs6);
+	assert(testVictoria(tabs6));
+
 	cout << "Los tests han ido bien" << endl;
-	//cout << "Introduzca su nombre para empezar la partida" << endl;
-	//string enter;	
-	//cin >> enter;
+
 }
 //______________________________MAIN___________________________________________
 int main() {
@@ -412,6 +600,7 @@ int main() {
 
 	do
 	{
+		//Cargar Ranking
 		cargarRanking(puntosX, puntosO);
 		cout << "Ranking Actual: " << endl;
 		cout << "Victorias de X: " << puntosX << endl;
@@ -422,10 +611,11 @@ int main() {
 		else {
 			cout << "Turno del jugador O" << "\n";
 		}
+		//Mostrar tablero y empezar partida
 		mostrartablero(tab);
 		meterficha(tab, turno);
 		std::cout << "\x1B[2J\x1B[H";
-
+		//Comprovación victoria y actualización ranking
 		if (comprobarGanador(tab)) {
 			if (turno == true) {
 				cout << "Jugador X ha ganado" << endl;
@@ -439,6 +629,7 @@ int main() {
 				cout << "Jugador O ya lleva " << puntosO << " partidas ganadas" << endl;
 				guardarRanking(puntosX, puntosO);
 			}
+			//Volver a jugar o no
 			cout << "Quieres jugar otra partida? (s/n): " << endl;
 			cin >> respuesta;
 			if (respuesta == "s") {
